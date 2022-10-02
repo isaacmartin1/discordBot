@@ -4,7 +4,11 @@
     "description": "My First Discord Bot",
     "main": "app.js",
     "author": "Isaac Martin",
-    "start": "node app.js"    ,
+    "worker": "node app.js",
+    "scripts": {
+        "start": "node app.js",
+        "devStart": "nodemon app.js"
+    },
     "dependencies": {
         "@angular/animations": "^9.1.4",
         "@angular/common": "^9.1.4",
@@ -18,7 +22,10 @@
         "@angular/router": "^9.1.4",
         "discord.io": "https://github.com/woor/discord.io/tarball/gateway_v6",
         "discord.js": "^14.4.0",
+        "google": "^2.1.0",
+        "google-search": "^0.0.5",
         "install": "^0.13.0",
+        "moment": "^2.29.4",
         "npm": "^8.19.2",
         "winston": "^3.8.2"
     }
