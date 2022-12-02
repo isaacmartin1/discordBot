@@ -1,10 +1,6 @@
-// token: MTAyMjY1NzQxOTkzNzA2MjkxMg.GTejNm.WX299B-X3mAk2jAt5QIS8yXPFM5aLwkj2NxxFA
-// client id: 1022657419937062912
-// `https://www.googleapis.com/customsearch/v1?key=AIzaSyA7GRPCFbW788AkDMKWeXi_Ar1pU0pas-w&cx=12b24cf7d9fde4174:omuauf_lfve&q=overwatch`;
 const fs = require("fs")
-const Discord = require('discord.io');
+require("dotenv").config()
 const { EmbedBuilder, Client, GatewayIntentBits, SlashCommandBuilder } = require('discord.js');
-const token = "MTAyMjY1NzQxOTkzNzA2MjkxMg.GTejNm.WX299B-X3mAk2jAt5QIS8yXPFM5aLwkj2NxxFA";
 const moment = require('moment')
 
 // Initialize discord bot
@@ -21,17 +17,17 @@ bot.on('ready', () => {
     console.log('This bot is online!');
 });
 
-setInterval(updateFollowers, 1000) // fire every half hour
+setInterval(updateFollowers, 1000*60*30) // fire every half hour
 
 function updateFollowers() {
     let current_hour = moment().format()
-    if (parseInt(current_hour.slice(11,13)) === 0) {
+    if (parseInt(current_hour.slice(11,13)) === 1) {
         fs.readFile('./followObject.json', {encoding: 'utf-8'}, function(err, data) {
             let file = JSON.parse(data);
             for (let i = 0; i < file['users'].length; i++){
                 let date = moment().format();
                 let current_day = parseInt(date.slice(8,10))
-                let current_month = parseInt(date.slice(6,8))
+                let current_month = parseInt(date.slice(5,7))
                 let current_year = parseInt(date.slice(0,4))
                 console.log(current_day, current_month, current_year, current_hour)
                 if (current_day < 4 && current_month === 10 && current_year === 2022) {
@@ -41,7 +37,8 @@ function updateFollowers() {
                 }
                 else if (current_month === 9 && current_year === 2022) {
                     let remainingDays = 31 - current_day + 3
-                    console.log(bot.users.cache.get(file['users'][i]))
+                    console.log('october_registered')
+                    //console.log(bot.users.cache.get(file['users'][i]))
                     let person = bot.users.cache.get(file['users'][i]);
                     person.send(`${remainingDays} days left until overwatch 2... :sunglasses: :eyes:`);
                 }
@@ -52,9 +49,9 @@ function updateFollowers() {
 
 // Send message when someone types 'when!' or 'news!'
 bot.on('messageCreate', message => {
-    console.log(message.content.toString())
+    //console.log(message.content.toString())
     if (message.content === "!follow") {
-        console.log(message.author);
+        //console.log(message.author);
         fs.readFile('./followObject.json', {encoding: 'utf-8'}, function(err, data) {
             let file = JSON.parse(data);
             for (let x = 0; x < file['users'].length; x++) {
@@ -76,12 +73,12 @@ bot.on('messageCreate', message => {
     }
     if (message.content === "!when") {
         let date = moment().format();
-        let current_day = parseInt(date.slice(9,11))
-        let current_month = parseInt(date.slice(7,9))
+        let current_day = parseInt(date.slice(8,10))
+        let current_month = parseInt(date.slice(5,7))
         let current_year = parseInt(date.slice(0,4))
         let current_hour = parseInt(date.slice(11,13))
         let current_minutes = parseInt(date.slice(14,16))
-        console.log(current_day, current_month, current_year, current_hour, date)
+        //console.log(current_day, current_month, current_year, current_hour, date)
         if (current_day < 4 && current_month === 10 && current_year === 2022) {
             let remainingDays = 3 - current_day
             let remainingHours = 24 - current_hour - 1
@@ -121,4 +118,4 @@ bot.on('messageCreate', message => {
     }
 })
 
-bot.login("MTAyMjY1NzQxOTkzNzA2MjkxMg.GTejNm.WX299B-X3mAk2jAt5QIS8yXPFM5aLwkj2NxxFA");
+bot.login(process.env.TOKEN);
