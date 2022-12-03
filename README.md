@@ -7,3 +7,9 @@ This bot has three main functionalities.
 3. When someone types `!when` in a server channel that this bot operates in, the bot will respond with the time until Overwatch 2 releases. Since the game is already out, the bot will respond that the user should go play the game.
 
 The original followObject.json file is not included because it contains specific user ID's. Of course, nodemon and .env are also excluded.
+
+The followObject.json file should be located in the main directory with the following code:
+
+```js
+{"users":[]}
+```
