@@ -1,6 +1,6 @@
 const fs = require("fs")
 require("dotenv").config()
-const { EmbedBuilder, Client, GatewayIntentBits, SlashCommandBuilder } = require('discord.js');
+const { EmbedBuilder, Client, GatewayIntentBits, SlashCommandBuilder, discordSort, MembershipScreeningFieldType } = require('discord.js');
 const moment = require('moment')
 
 // Initialize discord bot
@@ -8,7 +8,8 @@ const bot = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent
+        GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildPresences,
     ]
 });
 
@@ -44,6 +45,27 @@ function updateFollowers() {
                 }
             }
         })
+    }
+}
+
+// run every hour
+setInterval(findOneUserPresence, 1000*60*60)
+
+async function findOneUserPresence() {
+    // get server
+    const guild = await bot.guilds.cache.get(process.env.SERVER_ID).members.cache
+
+    // get list of online users
+    // three settings here: online, idle, dnd
+    const onlineUsersList = guild.filter((online) => online.presence?.status === 'online')
+
+    // check if specific username is in list
+    const specificUserStatus = onlineUsersList.filter((member) => member.user.username === process.env.SPECIFIC_USERNAME)
+
+    // if they exists, post to channel
+    if (specificUserStatus.size === 1) {
+        const channel = bot.channels.cache.find(channel => channel.id === process.env.CHANNEL_ID)
+        channel.send(`${process.env.SPECIFIC_USERNAME} is online!`)
     }
 }
 

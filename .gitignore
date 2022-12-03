@@ -1,3 +1,2 @@
-node_modules
-followObject.json
 .env
+/node_modules
