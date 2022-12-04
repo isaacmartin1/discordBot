@@ -18,7 +18,7 @@ bot.on('ready', () => {
     console.log('This bot is online!');
 });
 
-setInterval(updateFollowers, 1000*60*30) // fire every half hour
+setInterval(updateFollowers, 1000*60*59) // fire every half hour
 
 function updateFollowers() {
     let current_hour = moment().format()
@@ -48,10 +48,10 @@ function updateFollowers() {
     }
 }
 
-// run every hour
-setInterval(findOneUserPresence, 1000*60*60)
+// run every 10 minutes and pass in interval to callback function
+const myInterval = setInterval(() => {findOneUserPresence(myInterval)}, 1000*60*10);
 
-async function findOneUserPresence() {
+async function findOneUserPresence(myInterval) {
     // get server
     const guild = await bot.guilds.cache.get(process.env.SERVER_ID).members.cache
 
@@ -66,6 +66,8 @@ async function findOneUserPresence() {
     if (specificUserStatus.size === 1) {
         const channel = bot.channels.cache.find(channel => channel.id === process.env.CHANNEL_ID)
         channel.send(`${process.env.SPECIFIC_USERNAME} is online!`)
+        // stop refreshing once it finds the user online
+        clearInterval(myInterval)
     }
 }
 
